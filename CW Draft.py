@@ -378,29 +378,3 @@ class EditTask(root.Tk):
 
 app = Menu()
 app.mainloop()
-
-
-
-#This iterates through the first value of each line
-
-##with open('test.csv', 'r') as f: #This opens up the database file in a way it can only be read. The file is hereby referred to in the code as 'f'. Using a 'with open' function means the file doesn't need to be manually closed, the system will close the file itself.
-##            _list = []  #An empty list is created
-##            for line in f: #Each line of the file will be individually subject to the following code
-##                details = line.split(",") #This defines 'details' as a way to place a comma between parts of a line
-##                task = ToDoTask(details[0], details[1], details[2], details[3], details[4], details[5], details[6], details[7], details[8], details[9]) #This defines employee as an instance of the Employee class, with 7 line splits, each one correlating to one of the attributes given to an employee initially. It uses the 'details' variable that was just defined.
-##                _list.append(task)             
-##            for task in _list: 
-##                    print("This ID is already taken, please use another ID.\n")
-
-
-
-#This iterates through each task
-
-##with open('test.csv', 'r') as f: #This opens up the database file in a way it can only be read. The file is hereby referred to in the code as 'f'. Using a 'with open' function means the file doesn't need to be manually closed, the system will close the file itself.
-##            _list = []  #An empty list is created
-##            for line in f: #Each line of the file will be individually subject to the following code
-##                details = line.split(",") #This defines 'details' as a way to place a comma between parts of a line
-##                task = ToDoTask(details[0], details[1], details[2], details[3], details[4], details[5], details[6], details[7], details[8], details[9]) #This defines employee as an instance of the Employee class, with 7 line splits, each one correlating to one of the attributes given to an employee initially. It uses the 'details' variable that was just defined.
-##                _list.append(task)             
-##            for task in line: 
-##                    print("This ID is already taken, please use another ID.\n")
