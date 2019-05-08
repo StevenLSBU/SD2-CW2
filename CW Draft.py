@@ -302,11 +302,11 @@ class Menu(root.Tk):
         self.EditTaskWin.entTaskDesc = StringVar()
         self.EditTaskWin.status = StringVar()
         self.EditTaskWin.priority = IntVar()
-        self.EditTaskWin.StartDay = IntVar()
+        self.EditTaskWin.StartDay = StringVar()
         self.EditTaskWin.StartMonth = StringVar()
         self.EditTaskWin.MonthList = ("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
         self.EditTaskWin.StartYear = IntVar()
-        self.EditTaskWin.EndDay = IntVar()
+        self.EditTaskWin.EndDay = StringVar()
         self.EditTaskWin.EndMonth = StringVar()
         self.EditTaskWin.EndYear = IntVar()
 
@@ -371,7 +371,7 @@ class Menu(root.Tk):
         
         lblStartDate = Label(self.EditTaskWin, text="Start Date:", pady=10)
 
-        cmbxStartDay = OptionMenu(self.EditTaskWin, self.EditTaskWin.StartDay, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31)
+        cmbxStartDay = OptionMenu(self.EditTaskWin, self.EditTaskWin.StartDay, '01', '02', '03', '04', '05', '06', '07', '08', '09', 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31)
         cmbxStartMonth = OptionMenu(self.EditTaskWin, self.EditTaskWin.StartMonth, *self.EditTaskWin.MonthList)
         cmbxStartYear = OptionMenu(self.EditTaskWin, self.EditTaskWin.StartYear, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034)
 
@@ -382,7 +382,7 @@ class Menu(root.Tk):
         
         lblEndDate = Label(self.EditTaskWin, text="End Date:", pady=10)
 
-        cmbxEndDay = OptionMenu(self.EditTaskWin, self.EditTaskWin.EndDay, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31)
+        cmbxEndDay = OptionMenu(self.EditTaskWin, self.EditTaskWin.EndDay, '01', '02', '03', '04', '05', '06', '07', '08', '09', 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31)
         cmbxEndMonth = OptionMenu(self.EditTaskWin, self.EditTaskWin.EndMonth, *self.EditTaskWin.MonthList)
         cmbxEndYear = OptionMenu(self.EditTaskWin, self.EditTaskWin.EndYear, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037, 2038)
 
@@ -398,7 +398,7 @@ class Menu(root.Tk):
         btnMenu.place(x=300, y=215)
         
 
-    def WriteNewToFile(self):
+    def WriteNewToFile(self): 
         TaskName = self.NewTaskWin.entTaskName.get()
         TaskDesc = self.NewTaskWin.entTaskDesc.get()
         Status = self.NewTaskWin.status.get()
@@ -414,13 +414,13 @@ class Menu(root.Tk):
             messagebox.showerror("Error", "All fields must have values in order to save this task.")            
         elif StartY > EndY:
             messagebox.showerror("Error", "Please ensure valid dates have been entered.")
-        elif (StartM == "April" or StartM == "June" or StartM == "September" or StartM == "November") and (StartD >=30):
+        elif (StartM == "April" or StartM == "June" or StartM == "September" or StartM == "November") and (int(StartD) >=30):
             messagebox.showerror("Error", "Please ensure valid dates have been entered.")
-        elif StartM == "February" and StartD >=28:
+        elif StartM == "February" and int(StartD) >=28:
             messagebox.showerror("Error", "Please ensure valid dates have been entered.")
-        elif (EndM == "April" or EndM == "June" or EndM == "September" or EndM == "November") and (EndD >=30):
+        elif (EndM == "April" or EndM == "June" or EndM == "September" or EndM == "November") and (int(EndD) >=30):
             messagebox.showerror("Error", "Please ensure valid dates have been entered.")
-        elif EndM == "February" and EndD >=28:
+        elif EndM == "February" and int(EndD) >=28:
             messagebox.showerror("Error", "Please ensure valid dates have been entered.")        
         else:
             self.NewTaskWin.destroy()
@@ -452,27 +452,40 @@ class Menu(root.Tk):
 
         NewTask = ToDoTask(NewTaskName, NewTaskDesc, NewStatus, NewPriority, NewStartD, NewStartM, NewStartY, NewEndD, NewEndM, NewEndY)
 
-        with open('test.csv', 'r') as f:
-            FullTaskList = []
-            total = 0 #This creates a variable of 'total', with a value of 0. It will be used to check when the list has ended.
-            num_lines = 0 #This creates a variable of 'num_lines' with a value of 0. It  will be used to check when the list has ended.  
-            for line in f:
-                details = line.split(",")
-                SavedTask = ToDoTask(details[0], details[1], details[2], details[3], details[4], details[5], details[6], details[7], details[8], details[9])
-                FullTaskList.append(SavedTask)
-                num_lines += 1 #For every line in the database, the value of num_lines increases by one. This counts the total number of lines (and by extension, tasks) in the database.
+        if NewTaskName == '' or NewTaskDesc == '':
+            messagebox.showerror("Error", "All fields must have values in order to save this task.")            
+        elif NewStartY > NewEndY:
+            messagebox.showerror("Error", "Please ensure valid dates have been entered.")
+        elif (NewStartM == "April" or NewStartM == "June" or NewStartM == "September" or NewStartM == "November") and (int(NewStartD) >=30):
+            messagebox.showerror("Error", "Please ensure valid dates have been entered.")
+        elif NewStartM == "February" and int(NewStartD) >=28:
+            messagebox.showerror("Error", "Please ensure valid dates have been entered.")
+        elif (NewEndM == "April" or NewEndM == "June" or NewEndM == "September" or NewEndM == "November") and (int(NewEndD) >=30):
+            messagebox.showerror("Error", "Please ensure valid dates have been entered.")
+        elif NewEndM == "February" and int(NewEndD) >=28:
+            messagebox.showerror("Error", "Please ensure valid dates have been entered.")        
+        else:
+            with open('test.csv', 'r') as f:
+                FullTaskList = []
+                total = 0 #This creates a variable of 'total', with a value of 0. It will be used to check when the list has ended.
+                num_lines = 0 #This creates a variable of 'num_lines' with a value of 0. It  will be used to check when the list has ended.  
+                for line in f:
+                    details = line.split(",")
+                    SavedTask = ToDoTask(details[0], details[1], details[2], details[3], details[4], details[5], details[6], details[7], details[8], details[9])
+                    FullTaskList.append(SavedTask)
+                    num_lines += 1 #For every line in the database, the value of num_lines increases by one. This counts the total number of lines (and by extension, tasks) in the database.
 
-        for SavedTask in FullTaskList:
-            if SavedTask.TaskName == Task.TaskName:# and SavedTask.TaskDesc == Task.TaskDesc and SavedTask.Status == Task.Status and SavedTask.Priority == Task.Priority and SavedTask.StartD == Task.StartD and SavedTask.StartM == Task.StartM and SavedTask.StartY == Task.StartY and SavedTask.EndD == Task.EndD and SavedTask.EndM == Task.EndM and SavedTask.EndY == Task.EndY:
-                FullTaskList.remove(SavedTask)
-                FullTaskList.append(NewTask)
-                with open('test.csv', 'w') as f:
-                    for SavedTask in FullTaskList:
-                        f.write(SavedTask.TaskName + ',' + SavedTask.TaskDesc + ',' + SavedTask.Status + ',' + str(SavedTask.Priority) + ',' + str(SavedTask.StartD) + ',' + str(SavedTask.StartM) + ',' + str(SavedTask.StartY) + ',' + str(SavedTask.EndD) + ',' + str(SavedTask.EndM) + ',' + str(SavedTask.EndY) + ', \n')
+            for SavedTask in FullTaskList:
+                if SavedTask.TaskName == Task.TaskName:# and SavedTask.TaskDesc == Task.TaskDesc and SavedTask.Status == Task.Status and SavedTask.Priority == Task.Priority and SavedTask.StartD == Task.StartD and SavedTask.StartM == Task.StartM and SavedTask.StartY == Task.StartY and SavedTask.EndD == Task.EndD and SavedTask.EndM == Task.EndM and SavedTask.EndY == Task.EndY:
+                    FullTaskList.remove(SavedTask)
+                    FullTaskList.append(NewTask)
+                    with open('test.csv', 'w') as f:
+                        for SavedTask in FullTaskList:
+                            f.write(SavedTask.TaskName + ',' + SavedTask.TaskDesc + ',' + SavedTask.Status + ',' + str(SavedTask.Priority) + ',' + str(SavedTask.StartD) + ',' + str(SavedTask.StartM) + ',' + str(SavedTask.StartY) + ',' + str(SavedTask.EndD) + ',' + str(SavedTask.EndM) + ',' + str(SavedTask.EndY) + ', \n')
 
-        self.EditTaskWin.destroy()
-        self.ListTasksWin.destroy()
-        self.ListTasks()
+            self.EditTaskWin.destroy()
+            self.ListTasksWin.destroy()
+            self.ListTasks()
 
 
 app = Menu()
