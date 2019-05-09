@@ -45,17 +45,20 @@ class Menu(root.Tk):
         self.Reminder()
 
     def Reminder(self):
-        today = datetime.date.today().strftime("%B %d, %Y")
-        
-        FullTaskList = []
-        with open("test.csv", "r") as f:
-            for line in f:
-                details = line.split(",")
-                Task = ToDoTask(details[0], details[1], details[2], details[3], details[4], details[5], details[6], details[7], details[8], details[9])
-                FullTaskList.append(Task)
-        for Task in FullTaskList:
-            if (str(Task.EndM) + ' ' + Task.EndD + ', ' + Task.EndY) == today and Task.Status != "Completed":
-                messagebox.showinfo("Task Due Today", "The %s task is due to be completed today." % Task.TaskName)            
+        try:
+            today = datetime.date.today().strftime("%B %d, %Y")
+            
+            FullTaskList = []
+            with open("test.csv", "r") as f:
+                for line in f:
+                    details = line.split(",")
+                    Task = ToDoTask(details[0], details[1], details[2], details[3], details[4], details[5], details[6], details[7], details[8], details[9])
+                    FullTaskList.append(Task)
+            for Task in FullTaskList:
+                if (str(Task.EndM) + ' ' + Task.EndD + ', ' + Task.EndY) == today and Task.Status != "Completed":
+                    messagebox.showinfo("Task Due Today", "The %s task is due to be completed today." % Task.TaskName)
+        except FileNotFoundError:
+            pass
 
                 
     def AddNewTask(self):
@@ -64,7 +67,7 @@ class Menu(root.Tk):
         sizex = 440
         sizey = 250
         posx = 800 #Sets the x position of where on the screen the window will appear
-        posy = 200 #Sets the y position of where on the screen the window will appear
+        posy = 50 #Sets the y position of where on the screen the window will appear
         self.NewTaskWin.wm_geometry('%dx%d+%d+%d' % (sizex, sizey, posx, posy))
         self.NewTaskWin.resizable(False, False)
         
@@ -170,84 +173,89 @@ class Menu(root.Tk):
 
 
     def ListTasks(self):
-        class Edit():
-            def __init__(self, Task, menu):
-                self.task = Task
-                self.menu = menu
+        try:
+            class Edit():
+                def __init__(self, Task, menu):
+                    self.task = Task
+                    self.menu = menu
 
-            def __call__(self):
-                self.menu.EditTask(self.task)
+                def __call__(self):
+                    self.menu.EditTask(self.task)
 
-        class Delete():
-            def __init__(self, Task, menu):
-                self.task = Task
-                self.menu = menu
+            class Delete():
+                def __init__(self, Task, menu):
+                    self.task = Task
+                    self.menu = menu
 
-            def __call__(self):
-                self.menu.DeleteTask(self.task)
+                def __call__(self):
+                    self.menu.DeleteTask(self.task)
 
-        self.ListTasksWin = Toplevel(self)
-        self.ListTasksWin.title("List All Tasks")
-        sizex = 670
-        sizey = 250
-        posx = 130 #Sets the x position of where on the screen the window will appear
-        posy = 320 #Sets the y position of where on the screen the window will appear
-        self.ListTasksWin.wm_geometry('%dx%d+%d+%d' % (sizex, sizey, posx, posy))
-        self.ListTasksWin.resizable(False, True)
+            self.ListTasksWin = Toplevel(self)
+            self.ListTasksWin.title("List All Tasks")
+            sizex = 670
+            sizey = 250
+            posx = 130 #Sets the x position of where on the screen the window will appear
+            posy = 320 #Sets the y position of where on the screen the window will appear
+            self.ListTasksWin.wm_geometry('%dx%d+%d+%d' % (sizex, sizey, posx, posy))
+            self.ListTasksWin.resizable(False, True)
 
-        lblTitle = Label(self.ListTasksWin, text="All To-Do Tasks",font='Ariel 10 bold')
-        lblTitle.grid(row=0, column=3)
+            lblTitle = Label(self.ListTasksWin, text="All To-Do Tasks",font='Ariel 10 bold')
+            lblTitle.grid(row=0, column=3)
 
-        btnReturn = Button(self.ListTasksWin, text="Return To Menu", command=self.ListTasksWin.destroy)
-        btnReturn.place(x=560, y=5)
+            btnReturn = Button(self.ListTasksWin, text="Return To Menu", command=self.ListTasksWin.destroy)
+            btnReturn.place(x=560, y=5)
 
-        for i in range(0,6):
-            self.ListTasksWin.grid_columnconfigure(i, minsize=90)
+            for i in range(0,6):
+                self.ListTasksWin.grid_columnconfigure(i, minsize=90)
 
-        lblHeadingTaskName = Label(self.ListTasksWin, text="Task Name")
-        lblHeadingTaskDesc = Label(self.ListTasksWin, text="Task Description")
-        lblHeadingTaskSDate = Label(self.ListTasksWin, text="Start Date")
-        lblHeadingTaskEDate = Label(self.ListTasksWin, text="End Date")
-        lblHeadingTaskStatus = Label(self.ListTasksWin, text="Current Status")
-        lblHeadingTaskPriority = Label(self.ListTasksWin, text="Priority")
+            lblHeadingTaskName = Label(self.ListTasksWin, text="Task Name")
+            lblHeadingTaskDesc = Label(self.ListTasksWin, text="Task Description")
+            lblHeadingTaskSDate = Label(self.ListTasksWin, text="Start Date")
+            lblHeadingTaskEDate = Label(self.ListTasksWin, text="End Date")
+            lblHeadingTaskStatus = Label(self.ListTasksWin, text="Current Status")
+            lblHeadingTaskPriority = Label(self.ListTasksWin, text="Priority")
 
-        lblHeadingTaskName.grid(row=1, column=0)
-        lblHeadingTaskDesc.grid(row=1, column=1)
-        lblHeadingTaskSDate.grid(row=1, column=2)
-        lblHeadingTaskEDate.grid(row=1, column=3)
-        lblHeadingTaskStatus.grid(row=1, column=4)
-        lblHeadingTaskPriority.grid(row=1, column=5)
+            lblHeadingTaskName.grid(row=1, column=0)
+            lblHeadingTaskDesc.grid(row=1, column=1)
+            lblHeadingTaskSDate.grid(row=1, column=2)
+            lblHeadingTaskEDate.grid(row=1, column=3)
+            lblHeadingTaskStatus.grid(row=1, column=4)
+            lblHeadingTaskPriority.grid(row=1, column=5)
 
-        FullTaskList = []
-        TasksCount = 1
-        with open("test.csv", "r") as f:
-            for line in f:
-                details = line.split(",")
-                Task = ToDoTask(details[0], details[1], details[2], details[3], details[4], details[5], details[6], details[7], details[8], details[9])
-                FullTaskList.append(Task)               
-        for Task in FullTaskList:
-            TasksCount += 1
-            lblTaskName = Label(self.ListTasksWin, text=Task.TaskName)
-            lblTaskDesc = Label(self.ListTasksWin, text=Task.TaskDesc)
-            lblTaskSDate = Label(self.ListTasksWin, text=(Task.StartD + ' ' + Task.StartM + ' ' + Task.StartY))
-            lblTaskEDate = Label(self.ListTasksWin, text=(Task.EndD + ' ' + Task.EndM + ' ' + Task.EndY))
-            lblTaskStatus = Label(self.ListTasksWin, text=Task.Status)
-            lblTaskPriority = Label(self.ListTasksWin, text=Task.Priority)
-            btnEdit = Button(self.ListTasksWin, text="Edit", command=Edit(Task, self), cursor='hand2', padx=15)
-            btnDelete = Button(self.ListTasksWin, text="Delete", command=Delete(Task, self), cursor='hand2')
+            FullTaskList = []
+            TasksCount = 1
+            with open("test.csv", "r") as f:
+                for line in f:
+                    details = line.split(",")
+                    Task = ToDoTask(details[0], details[1], details[2], details[3], details[4], details[5], details[6], details[7], details[8], details[9])
+                    FullTaskList.append(Task)               
+            for Task in FullTaskList:
+                TasksCount += 1
+                lblTaskName = Label(self.ListTasksWin, text=Task.TaskName)
+                lblTaskDesc = Label(self.ListTasksWin, text=Task.TaskDesc)
+                lblTaskSDate = Label(self.ListTasksWin, text=(Task.StartD + ' ' + Task.StartM + ' ' + Task.StartY))
+                lblTaskEDate = Label(self.ListTasksWin, text=(Task.EndD + ' ' + Task.EndM + ' ' + Task.EndY))
+                lblTaskStatus = Label(self.ListTasksWin, text=Task.Status)
+                lblTaskPriority = Label(self.ListTasksWin, text=Task.Priority)
+                btnEdit = Button(self.ListTasksWin, text="Edit", command=Edit(Task, self), cursor='hand2', padx=15)
+                btnDelete = Button(self.ListTasksWin, text="Delete", command=Delete(Task, self), cursor='hand2')
 
-            lblTaskName.grid(row=TasksCount, column=0)
-            lblTaskDesc.grid(row=TasksCount, column=1)
-            lblTaskSDate.grid(row=TasksCount, column=2)
-            lblTaskEDate.grid(row=TasksCount, column=3)
-            lblTaskStatus.grid(row=TasksCount, column=4)
-            lblTaskPriority.grid(row=TasksCount, column=5)
-            btnEdit.grid(row=TasksCount, column=6)
-            btnDelete.grid(row=TasksCount, column=7)
+                lblTaskName.grid(row=TasksCount, column=0)
+                lblTaskDesc.grid(row=TasksCount, column=1)
+                lblTaskSDate.grid(row=TasksCount, column=2)
+                lblTaskEDate.grid(row=TasksCount, column=3)
+                lblTaskStatus.grid(row=TasksCount, column=4)
+                lblTaskPriority.grid(row=TasksCount, column=5)
+                btnEdit.grid(row=TasksCount, column=6)
+                btnDelete.grid(row=TasksCount, column=7)
+        except FileNotFoundError:
+            self.ListTasksWin.destroy()
+            messagebox.showinfo("No Tasks", "You have no to-do tasks saved. Please add some using the 'Add New Task' button.")
+            
 
 
     def DeleteTask(self, Task):
-        msgboxDelete = messagebox.askquestion ('Delete Task?','Are you sure you want to delete this task',icon = 'warning')
+        msgboxDelete = messagebox.askquestion ('Delete Task?','Are you sure you want to delete this task?',icon = 'warning')
         if msgboxDelete == 'yes':
             with open('test.csv', 'r') as f:
                 FullTaskList = []
@@ -285,7 +293,7 @@ class Menu(root.Tk):
         sizex = 440
         sizey = 250
         posx = 800 #Sets the x position of where on the screen the window will appear
-        posy = 450 #Sets the y position of where on the screen the window will appear
+        posy = 300 #Sets the y position of where on the screen the window will appear
         self.EditTaskWin.wm_geometry('%dx%d+%d+%d' % (sizex, sizey, posx, posy))
         self.EditTaskWin.resizable(False, False)
 
